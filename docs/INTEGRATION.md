@@ -73,3 +73,11 @@ accepts the same canonical assetId. It owns dossier submissions, structured docu
 checks, review/acceptance and release manifests. Links preserve equipment context;
 browser-local decisions are not automatically synchronized across applications.
 For equipment without a seeded dossier, create a package from the shared master list.
+
+## ETL operations available
+
+The etl_monitoring demo at https://leetj94-lab.github.io/etl_monitoring/
+preserves assetId context and supports pipelineId/runId deep links. It processes
+pinned synthetic master, observation, drawing and accepted-handover inputs, with
+quarantine/retry/checkpoint evidence. It does not redefine equipment standards,
+release drawings, accept handovers or synchronize browser-local edits across sites.
