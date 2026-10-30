@@ -1,82 +1,86 @@
-# Asset Standard
+# Asset Standard — equipment lifecycle & standards
 
-A functional equipment lifecycle and standards-governance concept. It demonstrates
-how governed definitions prevent nonconforming equipment records from entering a
-registry, and how those identities remain traceable throughout their lifecycle.
+**Live GitHub Pages:** https://leetj94-lab.github.io/master_data/
 
-**Interactive concept · Synthetic data · Browser-local state.** No employer data,
-source code, layouts or engineering documents are included.
+Functional frontend concept with synthetic data and browser-local persistence.
+No employer data or live telemetry is included. Demo roles are not authentication.
 
-## Try the workflows
+## Lifecycle
 
-1. **Register equipment:** the empty form is blocked. Load a conforming example,
-   change capacity to 900 m³/h and see the range interlock. Restore 100 to register.
-2. The generated identity is `EQ-UT-00145`; the lifecycle starts at Registered.
-3. Close the drawer, select **Demo role → Admin**, reopen the equipment, provide
-   a commissioning date, acceptance reference and approval reason. Approve
-   commissioning, operation, suspension and retirement in the permitted order.
-4. **Standards library:** Operator has read-only access. Admin can change the pump
-   capacity limit and specification-reference requirement, preview affected records,
-   provide a publication reason and publish a new effective revision.
-5. Existing equipment is retained. Records outside the new standard become
-   **Review required**; commissioning/operation is blocked until corrected.
-6. **Revise master data:** make permitted attribute changes with a reason. The
-   canonical identity stays fixed and field changes are recorded in history.
-7. **Change history:** inspect registration, standard changes and lifecycle approvals.
-8. **About → Reset synthetic data** restores the original fixture.
+| State | Meaning | Allowed next state |
+| --- | --- | --- |
+| `set-up` | Registration, installation and acceptance preparation | `active`, or `expired` if cancelled |
+| `active` | Equipment approved for use | `inactive` |
+| `inactive` | Temporarily stopped, under maintenance or held in reserve | `active`, `expired` |
+| `expired` | Permanently withdrawn / life ended; identity retained | None |
 
-## Interlocks
+Activation requires current-standard conformance, a valid commissioning date,
+an acceptance reference and Admin approval. Expiry requires a reason and no open
+linked work. IDs and history are never reused or deleted by the demo workflow.
 
-- Approved equipment classification, site/location combinations and standard units.
-- Mandatory equipment name, manufacturer, model, serial, capacity and criticality.
-- Approved specification reference when required; unknown references are blocked.
-- Classification-specific numeric capacity ranges; pump ceiling is version controlled.
-- Manufacturer + serial uniqueness, case-insensitive, including retired records.
-- Generated immutable canonical IDs; a retired ID is never reassigned.
-- Admin-only standard publication and lifecycle approval within the demo domain.
-- No lifecycle skipping. Commissioning requires a valid date and acceptance reference.
-- Retirement requires suspension, a reason and zero open linked work requests.
-- Retired records cannot be edited. Suspending an asset remains possible when its
-  master data needs review; commissioning and operation require current conformance.
+## Governed equipment information
 
-The approved specification catalog is a synthetic fixture, not live delivery-system
-approval. Class/unit/location dictionaries are fixed in this sample. The admin editor
-versions two representative rules; it does not claim a generic no-code rules engine.
+- Identity: shared equipment ID, classification, model, manufacturer and serial.
+- Ownership: responsible organization, cost center and functional location.
+- Management specifications: rated capacity/unit, rated power, supply voltage,
+  design pressure, connection DN, construction material and design life.
+- Lifecycle dates: installation, commissioning and warranty; acceptance evidence.
+- Maintenance: strategy, inspection interval, planned service cycle, management
+  criterion / unit, prescribed checklist and activation acceptance criteria.
 
-## Run and test
+The applicable `STD-UT/CH/AH/TK-001` standard and its revision appear in the equipment
+directory and details. Limits shown are **prescribed management criteria**, not live
+measurements. ETL execution and quality monitoring belong in separate applications.
 
-No build step or dependencies are required. Node.js 22+ is recommended for tests.
+## Standards management
+
+Standards library has class-specific approved profiles. Operator can read them;
+the demo Admin can revise a management limit, inspection interval, planned-service
+cycle, checklist, pump capacity ceiling and specification-reference requirement.
+Publication records a revision and reason, previews affected equipment, and requires
+revalidation of affected existing records. Revalidating preserves their canonical IDs.
+The base identity/unit/location dictionaries are fixed for this sample.
+
+Registration checks required attributes, approved classification/location/material/
+voltage/unit codes, numeric design ranges, approved specification references and
+manufacturer + serial uniqueness, including expired records. Checks run in both
+UI feedback and the registration action.
+
+## Main-branch Pages publishing
+
+Pages settings: **Deploy from a branch → main → /(root)**.
+Root `index.html`, `app.js`, `domain.js`, `seed.js`, `style.css` and `.nojekyll` are
+committed ready to serve. No ChatGPT hosting is required. Source lives in `dist/`.
 
 ```sh
 npm test
-python3 -m http.server 8000 --directory dist
+npm run build
 ```
 
-Open http://localhost:8000 . Serve `dist/` through HTTP; ES modules do not work normally
-from `file://`. Authored frontend source is intentionally tracked inside `dist/`.
-The Pages workflow tests the domain and deploys this directory. Set repository
-**Settings → Pages → Source: GitHub Actions** before using Pages deployment.
+Run `npm run build` after editing `dist/`; commit the updated source **and** root
+publication files to main. The repository workflow validates tests and checks that
+root output matches the source; GitHub's branch Pages workflow handles deployment.
+It deliberately does not perform a second competing Actions-based deployment.
 
-## Architecture and limits
+Local preview: `python3 -m http.server 8000` then http://localhost:8000 .
 
-- `dist/domain.js`: pure validation and state-transition functions; both disabled UI
-  controls and action-time domain checks apply. Tests invoke these functions directly.
-- `dist/app.js`: registry, forms, administrator controls, details and history.
-- `dist/seed.js`: minimal shared equipment identities from the Digital Twin fixture.
-- Browser localStorage: persisted records, standards, revision and event history.
-- No telemetry monitoring, ETL execution or data-pipeline dashboard.
+## Try it
 
-Roles are a deliberate demo switch, **not authentication or a security boundary**.
-Domain checks execute in the client; users can modify browser state. A production
-service must repeat validation and authorization server-side, enforce database
-constraints, use transactions/optimistic concurrency, and store audit history durably.
+1. Register equipment → Load conforming example. An invalid capacity, missing
+   approved specification or invalid management field blocks registration.
+2. Correct the fields and register: the generated identity starts at `set-up`.
+3. Select Demo role → Admin, reopen the equipment, and approve activation with evidence.
+4. Standards library → choose equipment class → revise inspection/service/limit values
+   → provide publication reason → review impact → publish.
+5. Inspect flagged equipment, revise/revalidate with a reason, then review change history.
+6. About → Reset restores initial synthetic data.
 
-## Integration
+Snapshot contract is now **v2** because lifecycle semantics changed. The v2 storage
+namespace intentionally starts a fresh synthetic demo, leaving old local v1 data alone.
+Cross-site links preserve the same IDs between this app and Digital Twin. Local edits
+are not synchronized across apps; no shared backend or twin import is claimed.
 
-The original eight asset IDs match `leetj94-lab/digital_twin`. Deep links accept
-`?assetId=EQ-UT-00142`; a mapped asset links to the twin's same asset context. New
-registrations explicitly have no 3D node until mapped. Export produces a versioned
-master snapshot with conformance and lifecycle. See [integration](docs/INTEGRATION.md).
-No cross-site automatic synchronization or twin import is claimed in this release.
+For production, enforce validation, authorization, uniqueness, concurrency and audit
+on the server/database. This demo stores all changes in the visitor's browser.
 
-MIT for original application code.
+MIT for original code.

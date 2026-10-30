@@ -17,11 +17,11 @@ links to the deployed twin using `assetId` and `tab=Platform`. No user-supplied 
 URL is followed. Future apps should use the same site ID `DEMO-PLANT-01` and retain
 canonical IDs through renaming and retirement. Never use names as join keys.
 
-## Snapshot contract v1
+## Snapshot contract v2
 
 The Export action creates:
 
-- `schemaVersion: "1.0.0"`, `source: "master_data"`, `siteId`, `synthetic: true`;
+- `schemaVersion: "2.0.0"`, `source: "master_data"`, `siteId`, `synthetic: true`;
 - `exportedAt` in UTC, published `standard` and `assets`;
 - each asset has `id`, `assetClass`, `name`, `siteId`, `area`, specifications,
   `status`, `registeredStandard`, acceptance/retirement context and `conformance`.
@@ -47,3 +47,14 @@ correlationId. Consumers deduplicate events and reject stale versions. Document-
 will own approved document releases; replace the local specification catalog through
 an adapter. ETL consumes standardized identities and reports its own operational status
 in the separate ETL application. None of those backend/event services are implemented here.
+
+## Current Pages deployment and lifecycle
+
+Master: https://leetj94-lab.github.io/master_data/
+Twin: https://leetj94-lab.github.io/digital_twin/
+
+Lifecycle vocabulary is set-up, active, inactive and expired. It is a breaking
+semantic change from the earlier v1 sample, so master snapshots use version 2.0.0.
+Preserve canonical asset IDs. Prescribed management and maintenance profiles are
+part of master governance, not a source of measured quality/ETL telemetry.
+An adapter must map lifecycle explicitly; expired must never be inferred as active.

@@ -1,4 +1,4 @@
-name: Validate and deploy
+name: Validate main branch site
 on:
   push:
     branches: [main]
@@ -16,19 +16,6 @@ jobs:
           node-version: '22'
       - run: npm test
       - run: node --check dist/app.js
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-  deploy:
-    if: github.event_name != 'pull_request'
-    needs: validate
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/deploy-pages@v4
-        id: deployment
+      - run: npm run build
+      - name: Check committed main-branch publication
+        run: git diff --exit-code -- index.html app.js domain.js seed.js style.css .nojekyll
