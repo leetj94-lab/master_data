@@ -65,3 +65,11 @@ Initial mapped equipment can open https://leetj94-lab.github.io/engineering_draw
 with the same assetId. The drawing demo contains released P&ID, arrangement and
 single-line relationships for the original eight equipment identities. New local
 registrations do not automatically create drawing relationships or synchronize apps.
+
+## Document handover available
+
+The document_delivery demo at https://leetj94-lab.github.io/document_delivery/
+accepts the same canonical assetId. It owns dossier submissions, structured document
+checks, review/acceptance and release manifests. Links preserve equipment context;
+browser-local decisions are not automatically synchronized across applications.
+For equipment without a seeded dossier, create a package from the shared master list.
