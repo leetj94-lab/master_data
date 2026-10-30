@@ -58,3 +58,10 @@ semantic change from the earlier v1 sample, so master snapshots use version 2.0.
 Preserve canonical asset IDs. Prescribed management and maintenance profiles are
 part of master governance, not a source of measured quality/ETL telemetry.
 An adapter must map lifecycle explicitly; expired must never be inferred as active.
+
+## Drawing navigation
+
+Initial mapped equipment can open https://leetj94-lab.github.io/engineering_drawing/
+with the same assetId. The drawing demo contains released P&ID, arrangement and
+single-line relationships for the original eight equipment identities. New local
+registrations do not automatically create drawing relationships or synchronize apps.
